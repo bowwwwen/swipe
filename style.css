@@ -481,3 +481,22 @@ body {
   gap: 32px;
   margin-bottom: 18px;
 }
+/* 讓容器能放絕對定位的卡片 */
+.talent-cards-area {
+  position: relative;
+  width: 95vw;
+  max-width: 900px;
+  height: 420px;
+  margin: 0 auto 24px;
+  overflow: hidden;
+}
+
+/* 卡片改絕對定位、置中並加過渡 */
+.talent-card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  touch-action: none; /* 確保 pointer 事件觸發 */
+}
