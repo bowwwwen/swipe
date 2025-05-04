@@ -1,6 +1,5 @@
 // script.js
 document.addEventListener('DOMContentLoaded', function() {
-  // Section 取得
   const pages = {
     home: document.getElementById('home'),
     companyRegister: document.getElementById('company-register'),
@@ -37,38 +36,88 @@ document.addEventListener('DOMContentLoaded', function() {
       school: '輔仁大學中文系大三',
       tags: ['#文字轉化力強', '#細心'],
       exp: ['提案競賽季軍'],
-      img: './people/p.jpg'
+      img: './people/p.jpg'       // 第一張
     },
     {
-      name: 'fju',
+      name: 'FJU',
       school: '範例大學',
       tags: ['#多才多藝'],
       exp: ['社團幹部'],
-      img: './people/fju.jpg'  // 指向您要加入的照片
+      img: './people/fju.jpg'    // 第二張
     }
   ];
   let currentCard = 0;
 
-function renderTalentCard(idx) {
-  const data = talentCardsData[idx];
-  document.querySelector('.talent-cards-area').innerHTML = `
-    <div class="talent-card">
-      <img src="${data.img}" class="talent-img" alt="${data.name}">
-      <div class="talent-info">
-        <div class="talent-school">${data.school} ${data.name}</div>
-        <div class="talent-tags">${data.tags.map(t=>`<div>${t}</div>`).join('')}</div>
-        <div class="talent-exp-title">實際經驗</div>
-        <ul class="talent-exp">${data.exp.map(e=>`<li>${e}</li>`).join('')}</ul>
-      </div>
-    </div>`;
-}
+  function renderTalentCard(idx) {
+    const data = talentCardsData[idx];
+    document.querySelector('.talent-cards-area').innerHTML = `
+      <div class="talent-card">
+        <img src="${data.img}" class="talent-img" alt="${data.name}">
+        <div class="talent-info">
+          <div class="talent-school">${data.school} ${data.name}</div>
+          <div class="talent-tags">${data.tags.map(t=>`<div>${t}</div>`).join('')}</div>
+          <div class="talent-exp-title">實際經驗</div>
+          <ul class="talent-exp">${data.exp.map(e=>`<li>${e}</li>`).join('')}</ul>
+        </div>
+      </div>`;
+    attachSwipe(document.querySelector('.talent-card'));
+  }
 
-document.getElementById('card-prev').onclick = () => {
-  if (currentCard > 0) renderTalentCard(--currentCard);
-};
-document.getElementById('card-next').onclick = () => {
-  if (currentCard < talentCardsData.length - 1) renderTalentCard(++currentCard);
-};
+  document.getElementById('card-prev').onclick = () => {
+    if (currentCard > 0) renderTalentCard(--currentCard);
+  };
+  document.getElementById('card-next').onclick = () => {
+    if (currentCard < talentCardsData.length - 1) renderTalentCard(++currentCard);
+  };
+
+  // Tinder 式滑動效果
+  function attachSwipe(card) {
+    let startX, offsetX;
+    const area = document.querySelector('.talent-cards-area');
+    const threshold = 100;
+
+    card.addEventListener('pointerdown', e => {
+      startX = e.clientX;
+      card.style.transition = 'none';
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    });
+
+    function onMove(e) {
+      offsetX = e.clientX - startX;
+      card.style.transform = `translateX(${offsetX}px) rotate(${offsetX/10}deg)`;
+    }
+
+    function onUp() {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+
+      if (offsetX > threshold) {
+        card.style.transform = `translateX(${area.clientWidth}px) rotate(30deg)`;
+        nextCard();
+      } else if (offsetX < -threshold) {
+        card.style.transform = `translateX(-${area.clientWidth}px) rotate(-30deg)`;
+        prevCard();
+      } else {
+        card.style.transform = 'translateX(-50%)';
+      }
+    }
+  }
+
+  function nextCard() {
+    if (currentCard < talentCardsData.length - 1) {
+      currentCard++;
+      setTimeout(() => renderTalentCard(currentCard), 300);
+    }
+  }
+
+  function prevCard() {
+    if (currentCard > 0) {
+      currentCard--;
+      setTimeout(() => renderTalentCard(currentCard), 300);
+    }
+  }
 
   // 首次渲染
   renderTalentCard(0);
