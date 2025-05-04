@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
       school: '輔仁大學中文系大三',
       tags: ['#文字轉化力強', '#細心'],
       exp: ['提案競賽季軍'],
-      img: 'people/fju.jpg'
+      img: 'people/p.jpg'
     },
     {
       name: 'People P',
