@@ -37,14 +37,14 @@ document.addEventListener('DOMContentLoaded', function() {
       school: '輔仁大學中文系大三',
       tags: ['#文字轉化力強', '#細心'],
       exp: ['提案競賽季軍'],
-      img: 'people/p.jpg'
+      img: 'people/fju.jpg'
     },
     {
       name: 'People P',
       school: '範例大學',
       tags: ['#多才多藝'],
       exp: ['社團幹部'],
-      img: 'people/p.jpg'  // 指向您要加入的照片
+      img: 'people/fju.jpg'  // 指向您要加入的照片
     }
   ];
   let currentCard = 0;
