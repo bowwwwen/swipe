@@ -1,134 +1,151 @@
-// script.js
-document.addEventListener('DOMContentLoaded', function() {
-  const pages = {
-    home: document.getElementById('home'),
-    companyRegister: document.getElementById('company-register'),
-    companyChat: document.getElementById('company-chat'),
-    talentCards: document.getElementById('talent-cards'),
-    studentRegister: document.getElementById('student-register'),
-    studentResume: document.getElementById('student-resume'),
-    resumeProgress: document.getElementById('resume-progress'),
-    motivation: document.getElementById('motivation'),
-    finish: document.getElementById('finish'),
-    jobCards: document.getElementById('job-cards'),
-  };
+/* Reset & 基本版面 */
+body {
+  margin: 0;            /* 移除預設空白 */
+  padding: 0;
+  overflow-x: hidden;   /* 避免整個頁面水平滾動 */
+  background: #fff;
+  font-family: 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+}
+#app {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.page {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+}
+.page.active { display: flex; }
 
-  function showPage(name) {
-    Object.values(pages).forEach(p => p.classList.remove('active'));
-    pages[name].classList.add('active');
-    if (name === 'companyChat') {
-      setTimeout(() => {
-        showPage('talentCards');
-        renderTalentCard(0);
-      }, 3000);
-    }
-  }
+/* 基本按鈕與箭頭 */
+.main-btn {
+  font-size: 36px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(90deg, #aee9f7 0%, #bfa7f7 100%);
+  border: none;
+  border-radius: 40px;
+  padding: 18px 0;
+  width: 420px;
+  box-shadow: 0 4px 16px #d1e6ff;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  letter-spacing: 4px;
+  text-shadow: 0 2px 8px #6e7bbd;
+}
+.main-btn:hover {
+  background: linear-gradient(90deg, #7ed6fb 0%, #a7bff7 100%);
+  box-shadow: 0 8px 24px #b3d1ff;
+}
+.arrow {
+  position: absolute;
+  right: 48px;
+  bottom: 48px;
+  width: 64px;
+  height: 64px;
+  background: url('images/arrow.svg') no-repeat center/contain;
+}
 
-  // 首頁按鈕
-  document.getElementById('btn-company').onclick = () => showPage('companyRegister');
-  document.getElementById('btn-student').onclick = () => showPage('studentRegister');
-  document.getElementById('company-next').onclick = () => showPage('companyChat');
+/* form input */
+.form-block input {
+  font-size: 28px;
+  border: none;
+  border-radius: 32px;
+  background: #f2f3f7;
+  color: #5a6a9e;
+  padding: 22px 32px;
+  outline: none;
+  margin-bottom: 0;
+}
 
-  // 動態卡片資料
-  const talentCardsData = [
-    { name: '軒軒', school: '輔仁大學中文系大三', tags: ['#文字','#細心'], exp:['季軍'], img:'people/p.jpg' },
-    { name: 'FJU',  school: '範例大學', tags: ['#多才'], exp:['社團'], img:'people/fju.jpg' }
-  ];
-  let currentCard = 0;
+/* Chat Area */
+.chat-area {
+  width: 90vw;
+  max-width: 700px;
+  margin: 32px auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.chat-bubble.ai {
+  background: #25408f;
+  color: #fff;
+  align-self: flex-start;
+}
+.chat-bubble.user {
+  background: #f2f3f7;
+  color: #25408f;
+  align-self: flex-end;
+}
+.chat-bubble.loading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-weight: bold;
+  font-size: 22px;
+}
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 4px solid #dbe6fa;
+  border-top: 4px solid #25408f;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-  function renderTalentCard(idx) {
-    const data = talentCardsData[idx];
-    const area = document.querySelector('.talent-cards-area');
-    area.innerHTML = `
-      <div class="talent-card">
-        <img src="${data.img}" class="talent-img" alt="${data.name}"/>
-        <div class="talent-info">
-          <div class="talent-school">${data.school} ${data.name}</div>
-          <div class="talent-tags">${data.tags.map(t=>`<div>${t}</div>`).join('')}</div>
-          <div class="talent-exp-title">實際經驗</div>
-          <ul class="talent-exp">${data.exp.map(e=>`<li>${e}</li>`).join('')}</ul>
-        </div>
-      </div>`;
-    attachSwipe(area.querySelector('.talent-card'));
-  }
+/* Talent Cards 滑動區 */
+.talent-cards-title {
+  background: #25408f;
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  border-radius: 20px;
+  padding: 18px 32px;
+  margin: 32px auto 24px auto;
+  max-width: 700px;
+  text-align: left;
+}
+.talent-cards-area {
+  position: relative;
+  width: 95vw;
+  max-width: 900px;
+  height: 420px;
+  margin: 0 auto 24px auto;
+  overflow: hidden;
+}
+.talent-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  touch-action: pan-x; /* 允許水平手勢 */
+}
+.nav-icon { width: 32px; height: 32px; }
 
-  function attachSwipe(card) {
-    let startX = 0, deltaX = 0;
-    const threshold = 100;
-    const area = document.querySelector('.talent-cards-area');
+/* Send 按鈕 */
+.talent-card-input-area {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+.send-icon { display: inline-block; width: 36px; height: 36px; }
 
-    const onMove = e => {
-      deltaX = e.clientX - startX;
-      card.style.transform = `translateX(${deltaX}px) rotate(${deltaX/10}deg)`;
-    };
-
-    const onUp = () => {
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', onUp);
-      card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-
-      if (deltaX > threshold) {
-        card.style.transform = `translateX(${area.clientWidth}px) rotate(30deg)`;
-        nextCard();
-      } else if (deltaX < -threshold) {
-        card.style.transform = `translateX(-${area.clientWidth}px) rotate(-30deg)`;
-        prevCard();
-      } else {
-        card.style.transform = 'translateX(0) rotate(0)';
-      }
-    };
-
-    card.addEventListener('pointerdown', e => {
-      startX = e.clientX;
-      deltaX = 0;
-      card.style.transition = 'none';
-      window.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
-    }, { once: true });
-  }
-
-  function nextCard() {
-    if (currentCard < talentCardsData.length - 1) {
-      currentCard++;
-      setTimeout(() => renderTalentCard(currentCard), 300);
-    }
-  }
-  function prevCard() {
-    if (currentCard > 0) {
-      currentCard--;
-      setTimeout(() => renderTalentCard(currentCard), 300);
-    }
-  }
-
-  document.getElementById('card-prev').onclick = prevCard;
-  document.getElementById('card-next').onclick = nextCard;
-
-  // 初次載入
-  renderTalentCard(0);
-});
-
-let startX = 0;
-let currentX = 0;
-let isDragging = false;
-
-const card = document.querySelector('.talent-card');
-
-card.addEventListener('pointerdown', (e) => {
-  startX = e.clientX;
-  isDragging = true;
-  card.setPointerCapture(e.pointerId);
-});
-
-card.addEventListener('pointermove', (e) => {
-  if (!isDragging) return;
-  currentX = e.clientX;
-  const deltaX = currentX - startX;
-  card.style.transform = `translateX(${deltaX}px)`;
-});
-
-card.addEventListener('pointerup', (e) => {
-  isDragging = false;
-  card.releasePointerCapture(e.pointerId);
-  card.style.transform = 'translateX(0)';
-});
-
+/* Responsive */
+@media (max-width: 600px) {
+  .main-btn, .form-block input { width: 90vw; font-size: 22px; padding: 14px 0; }
+  .arrow { width: 40px; height: 40px; right: 16px; bottom: 16px; }
+  .chat-area, .chat-input-area { width: 98vw; }
+  .chat-bubble { font-size: 18px; padding: 14px; }
+  .send-icon { width: 28px; height: 28px; }
+}
