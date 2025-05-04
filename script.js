@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
       img: 'people/p.jpg'
     },
     {
-      name: 'People P',
+      name: 'fju',
       school: '範例大學',
       tags: ['#多才多藝'],
       exp: ['社團幹部'],
