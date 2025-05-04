@@ -387,3 +387,10 @@ body {
   gap: 32px;
   margin-bottom: 18px;
 }
+
+/* style.css */
+body {
+  margin: 0;            /* 移除預設空白 */
+  overflow-x: hidden;   /* 避免整個頁面水平滾動 */
+}
+
