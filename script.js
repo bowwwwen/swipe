@@ -106,3 +106,29 @@ document.addEventListener('DOMContentLoaded', function() {
   // 初次載入
   renderTalentCard(0);
 });
+
+let startX = 0;
+let currentX = 0;
+let isDragging = false;
+
+const card = document.querySelector('.talent-card');
+
+card.addEventListener('pointerdown', (e) => {
+  startX = e.clientX;
+  isDragging = true;
+  card.setPointerCapture(e.pointerId);
+});
+
+card.addEventListener('pointermove', (e) => {
+  if (!isDragging) return;
+  currentX = e.clientX;
+  const deltaX = currentX - startX;
+  card.style.transform = `translateX(${deltaX}px)`;
+});
+
+card.addEventListener('pointerup', (e) => {
+  isDragging = false;
+  card.releasePointerCapture(e.pointerId);
+  card.style.transform = 'translateX(0)';
+});
+
