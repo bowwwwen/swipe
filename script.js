@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
       school: '範例大學',
       tags: ['#多才多藝'],
       exp: ['社團幹部'],
-      img: 'images/p.jpg'  // 指向您要加入的照片
+      img: 'people/p.jpg'  // 指向您要加入的照片
     }
   ];
   let currentCard = 0;
