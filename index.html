@@ -58,30 +58,29 @@
     </section>
 
     <!-- 4. 人才卡片頁（滑動） -->
-<section id="talent-cards" class="page">
-  <div class="logo-title-row">
-    <h1 class="logo-title">TalenTag</h1>
-    <img class="logo-icon small" src="logo.svg" alt="TalenTag Logo"/>
-  </div>
-  <div class="talent-cards-title">以下為您推薦第一批次的 10 位人選。</div>
-
-  <div class="talent-cards-area"><!-- JS 動態插入卡片 --></div>
-
-  <div class="talent-cards-controls">
-    <button id="card-prev" class="card-nav-btn">上一位</button>
-    <!-- 把「下一位」改成飛機圖案 -->
-    <button id="card-next" class="card-nav-btn">
-      <img src="./people/send.jpg" alt="下一位" class="nav-icon"/>
-    </button>
-  </div>
-
-  <form class="talent-card-input-area" onsubmit="return false;">
-    <input type="text" placeholder="加入更多條件" id="talent-card-input"/>
-    <button type="submit" id="talent-card-send">
-      <img src="send.jpg" class="send-icon" alt="送出"/>
-    </button>
-  </form>
-</section>
+    <section id="talent-cards" class="page">
+      <div class="logo-title-row">
+        <h1 class="logo-title">TalenTag</h1>
+        <img class="logo-icon small" src="logo.svg" alt="TalenTag Logo"/>
+      </div>
+      <div class="talent-cards-title">以下為您推薦第一批次的 10 位人選。</div>
+      <div class="talent-cards-area"><!-- JS 會插入 .talent-card --></div>
+      <div class="talent-cards-controls">
+        <button id="card-prev" class="card-nav-btn">
+          <img src="prev.svg" alt="上一位" class="nav-icon"/>
+        </button>
+        <button id="card-next" class="card-nav-btn">
+          <!-- 改用 send.jpg（或 plane.svg） -->
+          <img src="people/send.jpg" alt="下一位" class="nav-icon"/>
+        </button>
+      </div>
+      <form class="talent-card-input-area" onsubmit="return false;">
+        <input type="text" placeholder="加入更多條件" id="talent-card-input"/>
+        <button type="submit" id="talent-card-send">
+          <img src="send.svg" class="send-icon" alt="送出"/>
+        </button>
+      </form>
+    </section>
 
     <!-- 8. 學生註冊頁 -->
     <section id="student-register" class="page">
