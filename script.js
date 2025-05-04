@@ -49,34 +49,26 @@ document.addEventListener('DOMContentLoaded', function() {
   ];
   let currentCard = 0;
 
-  function renderTalentCard(idx) {
-    const data = talentCardsData[idx];
-    const area = document.querySelector('.talent-cards-area');
-    area.innerHTML = `
-      <div class="talent-card">
-        <img src="${data.img}" class="talent-img" alt="${data.name}">
-        <div class="talent-info">
-          <div class="talent-school">${data.school} ${data.name}</div>
-          <div class="talent-tags">${data.tags.map(t => `<div>${t}</div>`).join('')}</div>
-          <div class="talent-exp-title">實際經驗</div>
-          <ul class="talent-exp">${data.exp.map(e => `<li>${e}</li>`).join('')}</ul>
-        </div>
+function renderTalentCard(idx) {
+  const data = talentCardsData[idx];
+  document.querySelector('.talent-cards-area').innerHTML = `
+    <div class="talent-card">
+      <img src="${data.img}" class="talent-img" alt="${data.name}">
+      <div class="talent-info">
+        <div class="talent-school">${data.school} ${data.name}</div>
+        <div class="talent-tags">${data.tags.map(t=>`<div>${t}</div>`).join('')}</div>
+        <div class="talent-exp-title">實際經驗</div>
+        <ul class="talent-exp">${data.exp.map(e=>`<li>${e}</li>`).join('')}</ul>
       </div>
-    `;
-  }
+    </div>`;
+}
 
-  document.getElementById('card-prev').onclick = () => {
-    if (currentCard > 0) {
-      currentCard--;
-      renderTalentCard(currentCard);
-    }
-  };
-  document.getElementById('card-next').onclick = () => {
-    if (currentCard < talentCardsData.length - 1) {
-      currentCard++;
-      renderTalentCard(currentCard);
-    }
-  };
+document.getElementById('card-prev').onclick = () => {
+  if (currentCard > 0) renderTalentCard(--currentCard);
+};
+document.getElementById('card-next').onclick = () => {
+  if (currentCard < talentCardsData.length - 1) renderTalentCard(++currentCard);
+};
 
   // 首次渲染
   renderTalentCard(0);
