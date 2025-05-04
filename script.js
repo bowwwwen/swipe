@@ -31,28 +31,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 動態卡片資料
   const talentCardsData = [
-    {
-      name: '軒軒',
-      school: '輔仁大學中文系大三',
-      tags: ['#文字轉化力強', '#細心'],
-      exp: ['提案競賽季軍'],
-      img: './people/p.jpg'       // 第一張
-    },
-    {
-      name: 'FJU',
-      school: '範例大學',
-      tags: ['#多才多藝'],
-      exp: ['社團幹部'],
-      img: './people/fju.jpg'    // 第二張
-    }
+    { name: '軒軒', school: '輔仁大學中文系大三', tags: ['#文字','#細心'], exp:['季軍'], img:'people/p.jpg' },
+    { name: 'FJU',  school: '範例大學', tags: ['#多才'], exp:['社團'], img:'people/fju.jpg' }
   ];
   let currentCard = 0;
 
   function renderTalentCard(idx) {
     const data = talentCardsData[idx];
-    document.querySelector('.talent-cards-area').innerHTML = `
+    const area = document.querySelector('.talent-cards-area');
+    area.innerHTML = `
       <div class="talent-card">
-        <img src="${data.img}" class="talent-img" alt="${data.name}">
+        <img src="${data.img}" class="talent-img" alt="${data.name}"/>
         <div class="talent-info">
           <div class="talent-school">${data.school} ${data.name}</div>
           <div class="talent-tags">${data.tags.map(t=>`<div>${t}</div>`).join('')}</div>
@@ -60,49 +49,42 @@ document.addEventListener('DOMContentLoaded', function() {
           <ul class="talent-exp">${data.exp.map(e=>`<li>${e}</li>`).join('')}</ul>
         </div>
       </div>`;
-    attachSwipe(document.querySelector('.talent-card'));
+    attachSwipe(area.querySelector('.talent-card'));
   }
 
-  document.getElementById('card-prev').onclick = () => {
-    if (currentCard > 0) renderTalentCard(--currentCard);
-  };
-  document.getElementById('card-next').onclick = () => {
-    if (currentCard < talentCardsData.length - 1) renderTalentCard(++currentCard);
-  };
-
-  // Tinder 式滑動效果
   function attachSwipe(card) {
-    let startX, offsetX;
-    const area = document.querySelector('.talent-cards-area');
+    let startX = 0, deltaX = 0;
     const threshold = 100;
+    const area = document.querySelector('.talent-cards-area');
 
-    card.addEventListener('pointerdown', e => {
-      startX = e.clientX;
-      card.style.transition = 'none';
-      window.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
-    });
+    const onMove = e => {
+      deltaX = e.clientX - startX;
+      card.style.transform = `translateX(${deltaX}px) rotate(${deltaX/10}deg)`;
+    };
 
-    function onMove(e) {
-      offsetX = e.clientX - startX;
-      card.style.transform = `translateX(${offsetX}px) rotate(${offsetX/10}deg)`;
-    }
-
-    function onUp() {
+    const onUp = () => {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
       card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
 
-      if (offsetX > threshold) {
+      if (deltaX > threshold) {
         card.style.transform = `translateX(${area.clientWidth}px) rotate(30deg)`;
         nextCard();
-      } else if (offsetX < -threshold) {
+      } else if (deltaX < -threshold) {
         card.style.transform = `translateX(-${area.clientWidth}px) rotate(-30deg)`;
         prevCard();
       } else {
-        card.style.transform = 'translateX(-50%)';
+        card.style.transform = 'translateX(0) rotate(0)';
       }
-    }
+    };
+
+    card.addEventListener('pointerdown', e => {
+      startX = e.clientX;
+      deltaX = 0;
+      card.style.transition = 'none';
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    }, { once: true });
   }
 
   function nextCard() {
@@ -111,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
       setTimeout(() => renderTalentCard(currentCard), 300);
     }
   }
-
   function prevCard() {
     if (currentCard > 0) {
       currentCard--;
@@ -119,6 +100,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // 首次渲染
+  document.getElementById('card-prev').onclick = prevCard;
+  document.getElementById('card-next').onclick = nextCard;
+
+  // 初次載入
   renderTalentCard(0);
 });
