@@ -500,3 +500,9 @@ body {
   transition: transform 0.3s ease, opacity 0.3s ease;
   touch-action: none; /* 確保 pointer 事件觸發 */
 }
+
+.nav-icon {
+  width: 32px;
+  height: 32px;
+}
+
