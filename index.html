@@ -61,20 +61,18 @@
     <section id="talent-cards" class="page">
       <div class="logo-title-row">
         <h1 class="logo-title">TalenTag</h1>
-        <img class="logo-icon small" src="images/logo.svg" alt="TalenTag Logo">
+        <img class="logo-icon small" src="logo.svg" alt="TalenTag Logo"/>
       </div>
       <div class="talent-cards-title">以下為您推薦第一批次的 10 位人選。</div>
-      <div class="talent-cards-area">
-        <!-- 卡片內容由 script.js 動態插入 -->
-      </div>
+      <div class="talent-cards-area"><!-- JS 動態插入卡片 --></div>
       <div class="talent-cards-controls">
         <button id="card-prev" class="card-nav-btn">上一位</button>
         <button id="card-next" class="card-nav-btn">下一位</button>
       </div>
       <form class="talent-card-input-area" onsubmit="return false;">
-        <input type="text" placeholder="加入更多條件" id="talent-card-input">
+        <input type="text" placeholder="加入更多條件" id="talent-card-input"/>
         <button type="submit" id="talent-card-send">
-          <span class="send-icon"></span>
+          <img src="send.svg" class="send-icon" alt="送出"/>
         </button>
       </form>
     </section>
