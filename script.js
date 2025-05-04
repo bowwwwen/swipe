@@ -14,18 +14,13 @@ document.addEventListener('DOMContentLoaded', function() {
     jobCards: document.getElementById('job-cards'),
   };
 
-  function showPage(pageName) {
-    // 隱藏所有頁面
+  function showPage(name) {
     Object.values(pages).forEach(p => p.classList.remove('active'));
-    // 顯示指定頁面
-    pages[pageName].classList.add('active');
-
-    // 若切換到「AI對話頁」，3 秒後自動跳到「人才卡片頁」
-    if (pageName === 'companyChat') {
+    pages[name].classList.add('active');
+    if (name === 'companyChat') {
       setTimeout(() => {
         showPage('talentCards');
         renderTalentCard(0);
-        currentCard = 0;
       }, 3000);
     }
   }
@@ -33,39 +28,56 @@ document.addEventListener('DOMContentLoaded', function() {
   // 首頁按鈕
   document.getElementById('btn-company').onclick = () => showPage('companyRegister');
   document.getElementById('btn-student').onclick = () => showPage('studentRegister');
-
-  // 企業主註冊→AI對話
   document.getElementById('company-next').onclick = () => showPage('companyChat');
 
-  // 人才卡片滑動邏輯
-  const talentCardsData = [ /* ...資料略同上... */ ];
+  // 動態卡片資料
+  const talentCardsData = [
+    {
+      name: '軒軒',
+      school: '輔仁大學中文系大三',
+      tags: ['#文字轉化力強', '#細心'],
+      exp: ['提案競賽季軍'],
+      img: 'images/talent1.jpg'
+    },
+    {
+      name: 'People P',
+      school: '範例大學',
+      tags: ['#多才多藝'],
+      exp: ['社團幹部'],
+      img: 'images/p.jpg'  // 指向您要加入的照片
+    }
+  ];
   let currentCard = 0;
-  function renderTalentCard(idx) { /* ...同上...*/ }
+
+  function renderTalentCard(idx) {
+    const data = talentCardsData[idx];
+    const area = document.querySelector('.talent-cards-area');
+    area.innerHTML = `
+      <div class="talent-card">
+        <img src="${data.img}" class="talent-img" alt="${data.name}">
+        <div class="talent-info">
+          <div class="talent-school">${data.school} ${data.name}</div>
+          <div class="talent-tags">${data.tags.map(t => `<div>${t}</div>`).join('')}</div>
+          <div class="talent-exp-title">實際經驗</div>
+          <ul class="talent-exp">${data.exp.map(e => `<li>${e}</li>`).join('')}</ul>
+        </div>
+      </div>
+    `;
+  }
+
   document.getElementById('card-prev').onclick = () => {
-    if (currentCard > 0) renderTalentCard(--currentCard);
+    if (currentCard > 0) {
+      currentCard--;
+      renderTalentCard(currentCard);
+    }
   };
   document.getElementById('card-next').onclick = () => {
-    if (currentCard < talentCardsData.length - 1) renderTalentCard(++currentCard);
+    if (currentCard < talentCardsData.length - 1) {
+      currentCard++;
+      renderTalentCard(currentCard);
+    }
   };
 
-  // 學生流程按鈕
-  document.getElementById('student-next').onclick = () => showPage('studentResume');
-  document.getElementById('resume-next').onclick = () => showPage('resumeProgress');
-  document.getElementById('resume-progress-next').onclick = () => {
-    showPage('jobCards');
-    renderJobCard(0);
-    currentJob = 0;
-  };
-  document.getElementById('motivation-done').onclick = () => showPage('finish');
-
-  // 職缺卡片  
-  const jobCardsData = [ /* ...資料略同上...*/ ];
-  let currentJob = 0;
-  function renderJobCard(idx) { /* ...同上...*/ }
-  document.getElementById('job-prev').onclick = () => {
-    if (currentJob > 0) renderJobCard(--currentJob);
-  };
-  document.getElementById('job-next').onclick = () => {
-    if (currentJob < jobCardsData.length - 1) renderJobCard(++currentJob);
-  };
+  // 首次渲染
+  renderTalentCard(0);
 });
